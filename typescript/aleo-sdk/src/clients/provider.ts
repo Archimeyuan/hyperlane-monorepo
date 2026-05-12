@@ -5,7 +5,6 @@ import { AltVM } from '@hyperlane-xyz/provider-sdk';
 import { assert, strip0x } from '@hyperlane-xyz/utils';
 
 import {
-  ALEO_NATIVE_DENOM,
   ALEO_NULL_ADDRESS,
   U128ToString,
   arrayToPlaintext,
@@ -407,7 +406,7 @@ export class AleoProvider extends AleoBase implements AltVM.IProvider {
 
     if (!remoteRouter) {
       return {
-        denom: ALEO_NATIVE_DENOM,
+        denom: '',
         amount: 0n,
       };
     }
@@ -440,7 +439,7 @@ export class AleoProvider extends AleoBase implements AltVM.IProvider {
     );
 
     return {
-      denom: ALEO_NATIVE_DENOM,
+      denom: '',
       amount: BigInt(total_quote),
     };
   }
@@ -558,7 +557,7 @@ export class AleoProvider extends AleoBase implements AltVM.IProvider {
 
       return {
         programName: programId,
-        functionName: 'transfer_remote_with_hook',
+        functionName: 'transfer_remote_with_hook_as',
         priorityFee: 0,
         privateFee: false,
         inputs: [
@@ -577,7 +576,7 @@ export class AleoProvider extends AleoBase implements AltVM.IProvider {
 
     return {
       programName: programId,
-      functionName: 'transfer_remote',
+      functionName: 'transfer_remote_as_signer',
       priorityFee: 0,
       privateFee: false,
       inputs: [
