@@ -32,7 +32,7 @@ import {
   PERMIT2_ADDRESS,
   coreFactories,
 } from './contracts.js';
-import { CoreConfig } from './types.js';
+import { CoreConfig, shouldDeployQuotedCalls } from './types.js';
 
 export class HyperlaneCoreDeployer extends HyperlaneDeployer<
   CoreConfig,
@@ -259,9 +259,11 @@ export class HyperlaneCoreDeployer extends HyperlaneDeployer<
     chain: ChainName,
     permit2?: Address,
   ): Promise<QuotedCalls> {
-    return this.deployContract(chain, 'quotedCalls', [
+    const quotedCalls = await this.deployContract(chain, 'quotedCalls', [
       permit2 ?? PERMIT2_ADDRESS,
     ]);
+    assert(quotedCalls, `Missing quotedCalls factory for ${chain}`);
+    return quotedCalls;
   }
 
   async deployTestRecipient(
@@ -293,7 +295,9 @@ export class HyperlaneCoreDeployer extends HyperlaneDeployer<
       mailbox.address,
     );
 
-    const quotedCalls = await this.deployQuotedCalls(chain, config.permit2);
+    const quotedCalls = shouldDeployQuotedCalls(config)
+      ? await this.deployQuotedCalls(chain, config.permit2)
+      : undefined;
 
     if (config.upgrade) {
       const timelockController = await this.deployTimelock(
@@ -322,7 +326,7 @@ export class HyperlaneCoreDeployer extends HyperlaneDeployer<
 
     return {
       ...ownableContracts,
-      quotedCalls,
+      ...(quotedCalls ? { quotedCalls } : {}),
     };
   }
 }

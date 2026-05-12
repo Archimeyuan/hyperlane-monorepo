@@ -52,6 +52,22 @@ export const legacyEthIcaRouter = '0x5E532F7B610618eE73C2B462978e94CB1F7995Ce';
 // Chains that require MinimalInterchainAccountRouter due to deployment size limits
 export const minimalIcaChains: ChainName[] = ['igra'];
 
+// EVM chains that cannot run the current Cancun-compiled IGP/QuotedCalls
+// artifacts. Deploy flows should recover existing IGP deployments and skip
+// latest-only contracts on these chains.
+export const legacyIgpChains: ChainName[] = [
+  'chilizmainnet',
+  'coti',
+  'electroneum',
+  'incentiv',
+  'metis',
+  'prom',
+  'pulsechain',
+  'taiko',
+  'torus',
+  'viction',
+];
+
 // Chains marked as disabled in registry metadata.
 // Derived programmatically from chain availability status.
 export function getDisabledChains(): ChainName[] {
